@@ -1,24 +1,22 @@
 module.exports = function transform(arr) {
   if ( !Array.isArray(arr) ) throw 'Error';
+  let newArr = [...arr];
 
   let dbn = "--double-next";
   let dbp = "--double-prev";
   let dsn = "--discard-next";
   let dsp = "--discard-prev";
 
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[0] === dbp || arr[0] === dsp) arr.shift();
-    if (arr[arr.length - 1] === dbn || arr[arr.length - 1] === dsn ) arr.pop();
-    if (arr[i] === dbn) arr[i] = arr[i + 1];
-    if (arr[i] === dbp) arr[i] = arr[i - 1];
+  for (let i = 0; i < newArr.length; i++) {
+    if (newArr[0] === dbp || newArr[0] === dsp) newArr.shift();
+    if (newArr[newArr.length - 1] === dbn || newArr[newArr.length - 1] === dsn ) newArr.pop();
+    if (newArr[i] === dsn && (newArr[i+2] === dbp || newArr[i+2] === dsp)) newArr.splice(i, 3);
+    if (newArr[i] === dbn) newArr[i] = newArr[i + 1];
+    if (newArr[i] === dbp) newArr[i] = newArr[i - 1];
+    if (newArr[0] === dbp || newArr[0] === dsp) newArr.shift();
+    if (newArr[newArr.length - 1] === dbn || newArr[newArr.length - 1] === dsn ) newArr.pop();
+    if (newArr[i] === dsn) newArr.splice(i--, 2);
+    if (newArr[i] === dsp) newArr.splice(--i, 2);
   }
-
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[0] === dbp || arr[0] === dsp) arr.shift();
-    if (arr[arr.length - 1] === dbn || arr[arr.length - 1] === dsn ) arr.pop();
-    if (arr[i] === dsn) arr.splice(i--, 2);
-    if (arr[i] === dsp) arr.splice(--i, 2);
-  }
-
-  return arr;
+  return newArr;
 };
